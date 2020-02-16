@@ -6,6 +6,7 @@ import cn.scau.springcloud.form.UserForm;
 import cn.scau.springcloud.domain.vo.UserVO;
 import cn.scau.springcloud.service.UserService;
 import cn.scau.springcloud.util.JwtUtils;
+import cn.scau.springcloud.util.RedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RedisUtils redisUtils;
+
     @RequestMapping(value = "login", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public ResultVO login(@Valid @RequestBody UserForm userForm, HttpServletResponse response) {
@@ -39,6 +43,7 @@ public class UserController {
         }
         // 登陆成功设置token并返回给前端
         String token = JwtUtils.createJWT(userForm.getUsername());
+        redisUtils.set(token, result, 60*60*2);
         System.out.println(token);
         Cookie cookie = new Cookie("token", token);
         cookie.setMaxAge(60 * 60 * 24);
