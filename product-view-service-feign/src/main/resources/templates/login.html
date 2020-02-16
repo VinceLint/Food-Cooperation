@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- import CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<div id="app">
+    <el-form>
+        <el-form-item>
+            <el-input v-model="user.username"></el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-input v-model="user.password"></el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-button @click="login">登 陆</el-button>
+        </el-form-item>
+    </el-form>
+</div>
+</body>
+<!-- import Vue before Element -->
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<!-- import JavaScript -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script>
+    var ax = axios.create({baseURL: 'http://localhost:8040/api-view/user/'});
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                form: {
+                    username: null,
+                    password: null,
+                },
+
+            }
+        },
+        methods: {
+            login() {
+                ax.post("login", this.form)
+                    .then(function (response) {
+                        that.res = response.data;
+                        $('#resModal').modal('show');
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+        }
+    })
+</script>
+</html>

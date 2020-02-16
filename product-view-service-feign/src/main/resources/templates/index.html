@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- import CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<div id="app">
+    <el-form>
+        <el-form-item>
+            <el-input v-model="user.username"></el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-input v-model="user.password"></el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-button @click="login">登 陆</el-button>
+        </el-form-item>
+    </el-form>
+</div>
+</body>
+<!-- import Vue before Element -->
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<!-- import JavaScript -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                userForm: {
+                    username: null,
+                    password: null,
+                },
+
+            }
+        },
+        methods: {
+            login() {
+                axios({
+                    method: 'post',
+                    url: cookurl('http://localhost:8040/api-view/user/'),
+                    params: {
+                        userForm: this.userForm,
+                    }
+                }).then(function(resp) {
+                    let result = resp.data
+                    if (result.code == 'VALID_ERROR') {
+                        showValidMsgs(ret.data)
+                    } else if (ret.code == 'FAILURE') {
+                        toastr.error(ret.msg)
+                    } else {
+                        saveAdmin(ret.data)
+                        saveAdminToken(resp.headers.token)
+                        window.location.href = "/idevtools/pages/admin/index.html"
+                    }
+                    vmAdminLogin.changeJCaptcha()
+                }).catch(function(error) {
+                    console.log(error)
+                    vmAdminLogin.changeJCaptcha()
+                })
+            }
+        }
+    })
+</script>
+</html>

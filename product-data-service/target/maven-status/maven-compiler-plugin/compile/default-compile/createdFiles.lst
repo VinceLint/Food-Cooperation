@@ -1,0 +1,5 @@
+cn/scau/springcloud/ProductDataServiceApplication.class
+cn/scau/springcloud/pojo/Product.class
+cn/scau/springcloud/ProductDataServiceApplication2.class
+cn/scau/springcloud/controller/ProductController.class
+cn/scau/springcloud/service/ProductService.class

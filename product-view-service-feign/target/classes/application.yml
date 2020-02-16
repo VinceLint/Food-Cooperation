@@ -1,0 +1,30 @@
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://localhost:8761/eureka/
+spring:
+  #链路追踪服务
+  zipkin:
+    base-url: http://localhost:9411
+  application:
+    name: product-view-service-feign
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    encoding: UTF-8
+    content-type: text/html
+    mode: HTML5
+#允许访问 /actuator/bus-refresh
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      cors:
+        allowed-origins: "*"
+        allowed-methods: "*"
+#断路器
+feign:
+  hystrix:
+    enabled: true

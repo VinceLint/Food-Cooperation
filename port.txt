@@ -1,0 +1,21 @@
+服务注册中心eureka-server: 8761
+服务版本配置config-server: 8030
+服务版本配置(消息队列)rabbitMQ: 5672
+数据微服务product-data-service: 8001,8002
+视图微服务product-view-service-feign: 80,8080
+服务链路追踪zipkin: 9411
+断路器监控hystrix-dashboard: 8020
+断路器聚合监控turbine: 8021
+网关zuul: 8040
+
+用户认证中心user-session: 9000
+
+启动顺序
+1. eureka-server
+2. config-server
+3. turbine
+4. hystrix-dashboard
+5. zuul
+6. product-data-service/user-session
+7. product-view-service-feign
+
