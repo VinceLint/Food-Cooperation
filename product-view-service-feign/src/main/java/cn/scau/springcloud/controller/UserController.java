@@ -1,17 +1,19 @@
 package cn.scau.springcloud.controller;
 
 import cn.scau.springcloud.domain.Result;
+import cn.scau.springcloud.domain.vo.ResultVO;
 import cn.scau.springcloud.form.UserForm;
 import cn.scau.springcloud.domain.vo.UserVO;
 import cn.scau.springcloud.service.UserService;
+import cn.scau.springcloud.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,22 +31,31 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping(value = "login", method = {RequestMethod.GET, RequestMethod.POST})
-    public Object login(@Valid @RequestBody UserForm userForm, Model model) {
+    @ResponseBody
+    public ResultVO login(@Valid @RequestBody UserForm userForm, HttpServletResponse response) {
         Result<UserVO> result = userService.login(userForm);
         if (!result.isSuccess()) {
-            return Result.argsErrResult(result.getMsg());
+            return ResultVO.error(result.getCode(), result.getMsg());
         }
-        model.addAttribute("userInfo", result.getResult());
-        return "index";
+        // 登陆成功设置token并返回给前端
+        String token = JwtUtils.createJWT(userForm.getUsername());
+        System.out.println(token);
+        Cookie cookie = new Cookie("token", token);
+        cookie.setMaxAge(60 * 60 * 24);
+        response.addCookie(cookie);
+        return ResultVO.success();
     }
 
-    @RequestMapping("index")
-    public Object index() {
-        return "index";
+    @RequestMapping("toLogin")
+//    @ResponseBody
+    public String index() {
+        return "login";
     }
 
     @RequestMapping("meta")
     public Map<String, Object> meta() {
+        Map<String, Object> map = new HashMap<>(1);
+//        map.put("userInfo", getCurrentUser)
         return null;
     }
 

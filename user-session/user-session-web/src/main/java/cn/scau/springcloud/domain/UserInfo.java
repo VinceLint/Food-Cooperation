@@ -1,14 +1,9 @@
-package cn.scau.springcloud.domain.vo;
+package cn.scau.springcloud.domain;
 
 import lombok.Data;
 
-
-/**
- * user's information view object
- * @author vincelin
- */
 @Data
-public class UserVO {
+public class UserInfo {
     private String username;
     private String email;
     private String phone;

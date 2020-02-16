@@ -8,13 +8,23 @@ spring:
     base-url: http://localhost:9411
   application:
     name: product-view-service-feign
+#  resources:
+#    static-locations: classpath:templates/
+#  mvc:
+#    view:
+#      prefix: html/
+#      suffix: .html
+#  mvc:
+#    view:
+#      suffix: .html
+#      prefix: html/
   thymeleaf:
     cache: false
-    prefix: classpath:/templates/
+    prefix: classpath:/templates/html/
     suffix: .html
     encoding: UTF-8
     content-type: text/html
-    mode: HTML5
+#    mode: HTML5
 #允许访问 /actuator/bus-refresh
 management:
   endpoints:

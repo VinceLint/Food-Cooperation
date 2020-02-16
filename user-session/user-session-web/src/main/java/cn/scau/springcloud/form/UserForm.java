@@ -1,10 +1,10 @@
 package cn.scau.springcloud.form;
 
-//import lombok.Data;
+import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 
-//@Data
+@Data
 public class UserForm {
     /**
      * 用户名
@@ -18,9 +18,9 @@ public class UserForm {
     @NotEmpty(message = "请输入密码")
     private String password;
 
-    /**
-     * 邮箱
-     */
-    @NotEmpty(message = "请输出邮箱")
-    private String eamil;
+//    /**
+//     * 邮箱
+//     */
+//    @NotEmpty(message = "请输出邮箱")
+//    private String eamil;
 }
