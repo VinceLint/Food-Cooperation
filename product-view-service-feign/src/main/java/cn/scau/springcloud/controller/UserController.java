@@ -14,6 +14,7 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +38,7 @@ public class UserController {
     @Autowired
     private RedisUtils redisUtils;
 
-    @RequestMapping(value = "login", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "doLogin", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public ResultVO login(@Valid @RequestBody UserForm userForm, HttpServletResponse response) {
         Result<UserVO> result = userService.login(userForm);
@@ -54,32 +55,38 @@ public class UserController {
         return ResultVO.success();
     }
 
-    @RequestMapping("toLogin")
+//    @RequestMapping("index")
 //    @ResponseBody
+//    public ResultVO index(HttpServletRequest request) {
+//        String token = CookieHelper.getToken(request.getCookies());
+//        if (token == null) {
+//            return ResultVO.error(ResultCode.ResponseCode.FORBIDDEN, "您还没有登陆，请登陆");
+//        }
+//        UserVO userVO = (UserVO) redisUtils.get(token);
+//        if (userVO == null) {
+//            return ResultVO.error(ResultCode.ResponseCode.FORBIDDEN, "长时间未操作，登陆信息失效");
+//        }
+//        return ResultVO.success(userVO);
+//
+//    }
+
+    @RequestMapping("login")
     public String toLogin() {
         return "login";
     }
 
+    @RequestMapping("register")
+    public String toRegister() {
+        return "register";
+    }
+
+    @RequestMapping("forgetPwd")
+    public String toForgetPwd() {
+        return "forgetPwd";
+    }
+
     @RequestMapping("index")
-    @ResponseBody
-    public ResultVO index(HttpServletRequest request) {
-        String token = CookieHelper.getToken(request.getCookies());
-        if (token == null) {
-            return ResultVO.error(ResultCode.ResponseCode.FORBIDDEN,"您还没有登陆，请登陆");
-        }
-        UserVO userVO = (UserVO)redisUtils.get(token);
-        if (userVO==null){
-            return ResultVO.error(ResultCode.ResponseCode.FORBIDDEN, "长时间未操作，登陆信息失效");
-        }
-        return ResultVO.success(userVO);
-
+    public String toIndex() {
+        return "index";
     }
-
-    @RequestMapping("meta")
-    public Map<String, Object> meta() {
-        Map<String, Object> map = new HashMap<>(1);
-//        map.put("userInfo", getCurrentUser)
-        return null;
-    }
-
 }

@@ -15,6 +15,6 @@ import javax.servlet.http.HttpServletRequest;
  */
 @FeignClient(value = "SESSION-SERVICE",fallback = UserClientFeignHystrix.class)
 public interface UserClientFeign {
-    @PostMapping("/user/login")
+    @PostMapping("/user/doLogin")
     public Result<UserVO> login(UserForm userform);
 }

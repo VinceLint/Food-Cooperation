@@ -23,15 +23,15 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
-    //配置客户端版本
-    @Value("${version}")
-    String version;
+//    //配置客户端版本
+//    @Value("${version}")
+//    String version;
 
     @RequestMapping("products")
     public Object products(Model m) {
         List<Product> ps = productService.listProducts();
         m.addAttribute("ps", ps);
-        m.addAttribute("version", version);
+//        m.addAttribute("version", version);
         return "products";
     }
 }

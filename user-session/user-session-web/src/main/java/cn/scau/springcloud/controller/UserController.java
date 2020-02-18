@@ -20,7 +20,7 @@ import java.util.Map;
 public class UserController {
     private final static Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @RequestMapping("login")
+    @RequestMapping("doLogin")
     public Object login(@RequestBody @Valid UserForm userForm){
         System.out.println("进来了");
         // 校验登陆信息
