@@ -43,7 +43,6 @@
                 axios.post("http://localhost:8040/api-view/user/login", this.userForm)
                     .then(function (response) {
                         if (response.status==1001){
-                            this.token = response.data;
                             this.loginSuccess()
                         }
                     })
@@ -54,6 +53,7 @@
             },
             // 登陆成功
             loginSuccess() {
+                window.location.href="index.html";
             }
         }
     })
