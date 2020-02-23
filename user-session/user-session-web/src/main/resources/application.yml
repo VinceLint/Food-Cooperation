@@ -7,14 +7,31 @@ spring:
   application:
     #微服务名字
     name: session-service
+  datasource:
+    username: root
+    password:
+    url: jdbc:mysql://localhost:3306/FoodCooperation?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+    driver-class-name: com.mysql.jdbc.Driver
+    #  redis配置
+  redis:
+    host: localhost
+    port: 6379
+    password:
+    jedis:
+      pool:
+        #        连接池最大连接数
+        max-active: 100
+        #        最大等待时间
+        max-wait: 5s
+        #        最大空闲数
+        max-idle: 8
+        #        最小空闲数
+        min-idle: 0
+        #    连接超时时间
+        timeout: 3s
 eureka:
   client:
     serviceUrl:
       #注册中心地址
       defaultZone: http://localhost:8761/eureka/
 
-redis:
-  node:
-    maxTotal: 10
-    host: localhost
-    port: 6379

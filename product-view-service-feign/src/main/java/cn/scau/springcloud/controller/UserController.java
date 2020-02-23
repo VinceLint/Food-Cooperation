@@ -49,44 +49,25 @@ public class UserController {
         String token = JwtUtils.createJWT(userForm.getUsername());
         redisUtils.set(token, result.getResult(), 60 * 60 * 2);
         System.out.println(token);
-        Cookie cookie = new Cookie("token", token);
-        cookie.setMaxAge(60 * 60 * 24);
-        response.addCookie(cookie);
-        return ResultVO.success();
+        Map<String, Object> map = new HashMap<>(1);
+        map.put("token", token);
+        return ResultVO.success(map);
     }
 
-//    @RequestMapping("index")
-//    @ResponseBody
-//    public ResultVO index(HttpServletRequest request) {
+    // 暂时校验一下
+    @RequestMapping("doIndex")
+    @ResponseBody
+    public ResultVO index(HttpServletRequest request) {
 //        String token = CookieHelper.getToken(request.getCookies());
-//        if (token == null) {
-//            return ResultVO.error(ResultCode.ResponseCode.FORBIDDEN, "您还没有登陆，请登陆");
-//        }
-//        UserVO userVO = (UserVO) redisUtils.get(token);
-//        if (userVO == null) {
-//            return ResultVO.error(ResultCode.ResponseCode.FORBIDDEN, "长时间未操作，登陆信息失效");
-//        }
-//        return ResultVO.success(userVO);
-//
-//    }
-
-    @RequestMapping("login")
-    public String toLogin() {
-        return "login";
+        String token = request.getHeader("Authorization");
+        if (token == null) {
+            return ResultVO.error(ResultCode.ResponseCode.FORBIDDEN, "您还没有登陆，请登陆");
+        }
+        UserVO userVO = (UserVO) redisUtils.get(token);
+        if (userVO == null) {
+            return ResultVO.error(ResultCode.ResponseCode.FORBIDDEN, "长时间未操作，登陆信息失效");
+        }
+        return ResultVO.success(userVO);
     }
 
-    @RequestMapping("register")
-    public String toRegister() {
-        return "register";
-    }
-
-    @RequestMapping("forgetPwd")
-    public String toForgetPwd() {
-        return "forgetPwd";
-    }
-
-    @RequestMapping("index")
-    public String toIndex() {
-        return "index";
-    }
 }

@@ -37,7 +37,7 @@
     new Vue({
         el: '#app',
         data: {
-            loginReturnCode: false,
+            token: null,
             userForm: {
                 username: null,
                 password: null,
@@ -46,21 +46,35 @@
         },
         methods: {
             login() {
-                var that = this;
-                ax.post("doLogin", this.userForm)
-                    .then(function (response) {
-                        console.log(response.data.status)
+                // const _ts = this;
+                // ax.post("doLogin", this.userForm)
+                //     .then(function (response) {
+                //         console.log(response.data.status)
+                //         if (response.data.status == 1001) {
+                //             _ts.token = response.data.data;
+                //             _ts.loginSuccess()
+                //         }
+                //     })
+                //     .catch(function (error) {
+                //         console.log("账号密码错误")
+                //         console.log(error);
+                //     });
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:8040/api-view/user/doLogin",
+                    contentType: "application/json; charset=utf-8",
+                    data: this.userForm,
+                    success: function (response) {
                         if (response.data.status == 1001) {
-                            // that.loginReturnCode = true;
-                            that.loginSuccess()
+                            this.token = response.data.data;
+                            this.loginSuccess()
                         }
-                    })
-                    .catch(function (error) {
-                        console.log("账号密码错误")
-                        console.log(error);
-                    });
-                // console.log(that.loginReturnCode);
-                // if (that.loginReturnCode) that.loginSuccess();
+                    }.bind(this),
+                    error: function (message) {
+                        //失败信息
+                        console.log("error")
+                    }
+                });
             },
             // 登陆成功
             loginSuccess() {
@@ -70,7 +84,9 @@
                 //     // .catch(function (error) {
                 //     //     console.log("系统错误")
                 //     // });
-                window.location.href="http://localhost:8040/api-view/user/index"
+                console.log(this.token)
+                localStorage.setItem("token", this.token);
+                // window.location.href = "http://localhost:8040/api-view/user/index"
             },
             // 注册
             register() {

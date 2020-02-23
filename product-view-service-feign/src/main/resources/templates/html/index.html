@@ -22,10 +22,19 @@
 <!--import axios-->
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
+    var token = localStorage.getItem("token");
+    console.log(token)
+    axios({
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': token,
+        },
+    })
     new Vue({
         el: '#app',
         data: function () {
             return {
+                token: null,
                 userInfo: {
                     username: null,
                     email: null,
@@ -35,10 +44,11 @@
         },
         methods: {
             loadUserMsg() {
-                axios.post("http://localhost:8040/api-view/user/doIndex", this.userForm)
+                var that = this;
+                axios.get("http://localhost:8040/api-view/user/doIndex")
                     .then(function (response) {
                         if (response.status == 1001) {
-                            this.userInfo = response.data;
+                            that.userInfo = response.data.data;
                         }
                     })
                     .catch(function (error) {
