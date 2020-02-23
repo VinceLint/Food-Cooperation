@@ -6,6 +6,7 @@ import cn.scau.springcloud.domain.entity.UserDO;
 import cn.scau.springcloud.domain.query.UserQuery;
 import cn.scau.springcloud.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 

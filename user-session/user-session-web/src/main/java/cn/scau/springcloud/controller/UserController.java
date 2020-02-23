@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -26,12 +27,12 @@ import java.util.Map;
 public class UserController {
     private final static Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @Autowired
+    @Resource
     private UserManager userManager;
 
     @RequestMapping(value = "login", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public ResultVO login(@Valid @RequestBody LoginReq loginReq) {
+    public ResultVO login(@RequestBody @Valid LoginReq loginReq) {
         Result<LoginResp> result = userManager.login(loginReq);
         if (!result.isSuccess()) {
             return ResultVO.error(result.getCode(), result.getMsg());
@@ -41,7 +42,7 @@ public class UserController {
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
     @ResponseBody
-    public ResultVO register(@Valid @RequestBody RegisterReq registerReq) {
+    public ResultVO register(@RequestBody @Valid  RegisterReq registerReq) {
         Result<Boolean> result = userManager.register(registerReq);
         if (!result.isSuccess()) {
             return ResultVO.error(result.getCode(), result.getMsg());
@@ -51,7 +52,7 @@ public class UserController {
 
     @RequestMapping(value = "forgetPwd", method = RequestMethod.POST)
     @ResponseBody
-    public ResultVO forgetPwd(@Valid @RequestBody ResetPwdReq resetPwdReq) {
+    public ResultVO forgetPwd(@RequestBody @Valid ResetPwdReq resetPwdReq) {
         Result<Boolean> result = userManager.resetPwd(resetPwdReq);
         if (!result.isSuccess()) {
             return ResultVO.error(result.getCode(), result.getMsg());

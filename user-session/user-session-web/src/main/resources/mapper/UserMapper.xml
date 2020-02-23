@@ -26,46 +26,44 @@
 </sql>
 
     <sql id="Where_Clause">
-        <trim prefix="WHERE" prefixOverrides="AND |OR ">
-            <if test="id != null">
-                AND `id` = #{id}
-            </if>
-            <if test="username != null">
-                AND `username` = #{username}
-            </if>
-            <if test="password != null">
-                AND `password` = #{password}
-            </if>
-            <if test="salt != null">
-                AND `salt` = #{salt}
-            </if>
-            <if test="email != null">
-                AND `email` = #{email}
-            </if>
-            <if test="identity != null">
-                AND `identity` = #{identity}
-            </if>
-            <if test="phone != null">
-                AND `phone` = #{phone}
-            </if>
-            <if test="score != null">
-                AND `score` = #{score}
-            </if>
-            <if test="status != null">
-                AND `status` = #{status}
-            </if>
-            <if test="createdAt != null">
-                AND `created_at` = #{createdAt}
-            </if>
-            <if test="updatedAt != null">
-                AND `updated_at` = #{updatedAt}
-            </if>
-            <if test="deletedAt != null">
-                AND `deleted_at` = #{deletedAt}
-            </if>
-            AND is_deleted = 0
-            <!-- todo delete cannot query fields -->
-        </trim>
+        <if test="id != null">
+            AND `id` = #{id}
+        </if>
+        <if test="username != null">
+            AND `username` = #{username}
+        </if>
+        <if test="password != null">
+            AND `password` = #{password}
+        </if>
+        <if test="salt != null">
+            AND `salt` = #{salt}
+        </if>
+        <if test="email != null">
+            AND `email` = #{email}
+        </if>
+        <if test="identity != null">
+            AND `identity` = #{identity}
+        </if>
+        <if test="phone != null">
+            AND `phone` = #{phone}
+        </if>
+        <if test="score != null">
+            AND `score` = #{score}
+        </if>
+        <if test="status != null">
+            AND `status` = #{status}
+        </if>
+        <if test="createdAt != null">
+            AND `created_at` = #{createdAt}
+        </if>
+        <if test="updatedAt != null">
+            AND `updated_at` = #{updatedAt}
+        </if>
+        <if test="deletedAt != null">
+            AND `deleted_at` = #{deletedAt}
+        </if>
+        AND is_deleted = 0
+        <!-- todo delete cannot query fields -->
     </sql>
 
     <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id"
@@ -199,6 +197,17 @@
         <if test="start &gt;= 0 and pageSize &gt; 0">
             LIMIT #{start}, #{pageSize}
         </if>
+    </select>
+
+    <select id="queryOne" parameterType="cn.scau.springcloud.domain.query.UserQuery"
+            resultType="cn.scau.springcloud.domain.entity.UserDO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM `user`
+        <where>
+            <include refid="Where_Clause"/>
+        </where>
+        order by id limit 1
     </select>
 
     <select id="count" parameterType="cn.scau.springcloud.domain.query.UserQuery" resultType="java.lang.Integer">

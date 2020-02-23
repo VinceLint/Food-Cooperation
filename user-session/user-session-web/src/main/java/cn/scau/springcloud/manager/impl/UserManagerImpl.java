@@ -86,17 +86,17 @@ public class UserManagerImpl implements UserManager {
             return Result.argsErrResult("该用户不存在");
         }
         UserDO userDO = result.getResult();
-        if (userDO.getEmail() != resetPwdReq.getEmail()) {
+        if (!userDO.getEmail().equals(resetPwdReq.getEmail())) {
             return Result.argsErrResult("该用户绑定的邮箱有误");
         }
-        if (!resetPwdReq.getNewPassword().equals(resetPwdReq.getConfirmPassword())){
+        if (!resetPwdReq.getNewPassword().equals(resetPwdReq.getConfirmPassword())) {
             return Result.argsErrResult("两次输入的密码不一致");
         }
         String salt = userDO.getSalt();
         String newMD5Password = PasswordUtils.generateMd5Pwd(resetPwdReq.getNewPassword(), salt);
         userDO.setPassword(newMD5Password);
         Result<UserDO> userDOResult = userDao.update(userDO);
-        if (!userDOResult.isSuccess()){
+        if (!userDOResult.isSuccess()) {
             return Result.sysErrResult();
         }
         return Result.successResult(true);

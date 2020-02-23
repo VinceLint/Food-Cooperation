@@ -5,11 +5,15 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class UserQuery extends Query implements Serializable {
+    /** id*/
+    private Integer id;
+
     /** 用户名*/
     private String username;
 
@@ -33,4 +37,12 @@ public class UserQuery extends Query implements Serializable {
 
     /** 0:正常 2:冻结 2:删除*/
     private Integer status;
+
+    private Date createdAt;
+
+    private Date updatedAt;
+
+    private Date deletedAt;
+
+    private Integer isDeleted;
 }
