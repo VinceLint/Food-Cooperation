@@ -15,6 +15,7 @@
         <module>turbine</module>
         <module>zuul</module>
         <module>user-session</module>
+        <module>user-cooperation</module>
     </modules>
 
     <name>springcloud</name>

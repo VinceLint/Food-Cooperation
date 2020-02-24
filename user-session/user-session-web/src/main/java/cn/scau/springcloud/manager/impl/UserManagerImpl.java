@@ -7,7 +7,6 @@ import cn.scau.springcloud.domain.request.LoginReq;
 import cn.scau.springcloud.domain.request.RegisterReq;
 import cn.scau.springcloud.domain.request.ResetPwdReq;
 import cn.scau.springcloud.domain.response.LoginResp;
-import cn.scau.springcloud.domain.response.RegisterResp;
 import cn.scau.springcloud.enums.IdentityEnums;
 import cn.scau.springcloud.enums.StatusEnums;
 import cn.scau.springcloud.manager.UserManager;
@@ -16,9 +15,7 @@ import cn.scau.springcloud.util.PasswordUtils;
 import cn.scau.springcloud.util.RedisUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -74,7 +71,7 @@ public class UserManagerImpl implements UserManager {
         userDO.setScore(5);
         Result<UserDO> userDOResult = userDao.insert(userDO);
         if (!userDOResult.isSuccess()) {
-            return Result.sysErrResult();
+            return Result.sysErrResult(userDOResult.getMsg());
         }
         return Result.successResult(true);
     }

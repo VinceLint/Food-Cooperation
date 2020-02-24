@@ -9,6 +9,7 @@
 网关zuul: 8040
 
 用户认证中心user-session: 9000
+用户合作微服务user-cooperation: 9010
 
 启动顺序
 1. eureka-server
@@ -19,4 +20,3 @@
 6. product-data-service/user-session
 7. product-view-service-feign
 
-http://localhost:8040/api-view/user/toLogin
