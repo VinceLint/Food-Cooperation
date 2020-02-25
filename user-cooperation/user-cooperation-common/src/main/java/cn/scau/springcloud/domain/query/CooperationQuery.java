@@ -41,6 +41,12 @@ public class CooperationQuery extends Query implements Serializable {
     /** 发布者id*/
     private Integer userId;
 
+    private Date createdAt;
+
+    private Date updatedAt;
+
     /** 删除时间*/
     private Date deletedAt;
+
+    private Integer isDeleted;
 }
