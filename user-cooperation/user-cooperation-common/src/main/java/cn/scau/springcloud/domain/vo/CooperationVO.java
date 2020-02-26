@@ -37,6 +37,6 @@ public class CooperationVO {
     private String detail;
 
     /** 发布者id*/
-    private UserVO user;
+    private Integer userId;
 
 }

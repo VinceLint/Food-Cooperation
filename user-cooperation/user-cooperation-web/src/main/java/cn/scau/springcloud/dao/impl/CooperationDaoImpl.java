@@ -43,4 +43,9 @@ public class CooperationDaoImpl implements CooperationDao {
     public PageResult<CooperationDO> listCommonMsg(CooperationQuery query) {
         return DaoHelper.query(cooperationMapper, query);
     }
+
+    @Override
+    public Result<CooperationDO> queryOne(CooperationQuery query) {
+        return DaoHelper.queryOne(cooperationMapper, query);
+    }
 }

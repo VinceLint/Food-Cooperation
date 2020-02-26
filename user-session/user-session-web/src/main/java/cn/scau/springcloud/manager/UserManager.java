@@ -2,6 +2,7 @@ package cn.scau.springcloud.manager;
 
 import cn.scau.springcloud.domain.Result;
 import cn.scau.springcloud.domain.dto.UserDTO;
+import cn.scau.springcloud.domain.entity.UserDO;
 import cn.scau.springcloud.domain.request.LoginReq;
 import cn.scau.springcloud.domain.request.RegisterReq;
 import cn.scau.springcloud.domain.request.ResetPwdReq;
@@ -14,4 +15,6 @@ public interface UserManager {
     Result<Boolean> register(RegisterReq registerReq);
 
     Result<Boolean> resetPwd(ResetPwdReq resetPwdReq);
+
+    Result<UserDO> getUser(Integer id);
 }

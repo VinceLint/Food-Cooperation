@@ -16,7 +16,7 @@ public class CooperationHelper {
                 .stream().map(CooperationHelper::transferVO).collect(Collectors.toList());
     }
 
-    private static CooperationVO transferVO(CooperationDO cooperationDO) {
+    public static CooperationVO transferVO(CooperationDO cooperationDO) {
         CooperationVO cooperationVO = new CooperationVO();
         BeanUtils.copyProperties(cooperationDO, cooperationVO);
         cooperationVO.setPublishTimeStr(DateUtils.date2Str(cooperationDO.getPublishTime()));

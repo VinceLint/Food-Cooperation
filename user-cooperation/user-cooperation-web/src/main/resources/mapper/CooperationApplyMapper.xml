@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.scau.springcloud.mapper.CooperationApplyMapper">
+
+    <resultMap id="BaseResultMap" type="cn.scau.springcloud.domain.entity.CooperationApplyDO">
+        <result column="id" jdbcType="INTEGER" property="id"/>
+        <result column="cooperation_id" jdbcType="INTEGER" property="cooperationId"/>
+        <result column="cooperator_id" jdbcType="INTEGER" property="cooperatorId"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
+        <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
+        <result column="deleted_at" jdbcType="TIMESTAMP" property="deletedAt"/>
+        <result column="is_deleted" jdbcType="INTEGER" property="isDeleted"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+  `id`,`cooperation_id`,`cooperator_id`,`status`,`created_at`,`updated_at`,`deleted_at`,`is_deleted`
+</sql>
+
+    <sql id="Where_Clause">
+        <trim prefix="WHERE" prefixOverrides="AND |OR ">
+            <if test="id != null">
+                AND `id` = #{id}
+            </if>
+            <if test="cooperationId != null">
+                AND `cooperation_id` = #{cooperationId}
+            </if>
+            <if test="cooperatorId != null">
+                AND `cooperator_id` = #{cooperatorId}
+            </if>
+            <if test="status != null">
+                AND `status` = #{status}
+            </if>
+            <if test="createdAt != null">
+                AND `created_at` = #{createdAt}
+            </if>
+            <if test="updatedAt != null">
+                AND `updated_at` = #{updatedAt}
+            </if>
+            <if test="deletedAt != null">
+                AND `deleted_at` = #{deletedAt}
+            </if>
+            AND is_deleted = 0
+            <!-- todo delete cannot query fields -->
+        </trim>
+    </sql>
+
+    <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id"
+            parameterType="cn.scau.springcloud.domain.entity.CooperationApplyDO">
+        INSERT INTO `cooperation_apply`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cooperationId != null">
+                `cooperation_id`,
+            </if>
+            <if test="cooperatorId != null">
+                `cooperator_id`,
+            </if>
+            <if test="status != null">
+                `status`,
+            </if>
+            <if test="deletedAt != null">
+                `deleted_at`,
+            </if>
+            `updated_at`,
+            `created_at`,
+            `is_deleted`
+        </trim>
+        <trim prefix="VALUE (" suffix=")" suffixOverrides=",">
+            <if test="cooperationId != null">
+                #{cooperationId,jdbcType=INTEGER},
+            </if>
+            <if test="cooperatorId != null">
+                #{cooperatorId,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="deletedAt != null">
+                #{deletedAt,jdbcType=TIMESTAMP},
+            </if>
+            now(),
+            now(),
+            0
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="cn.scau.springcloud.domain.entity.CooperationApplyDO">
+        UPDATE `cooperation_apply`
+        <set>
+            <if test="cooperationId != null">
+                `cooperation_id` = #{cooperationId,jdbcType=INTEGER},
+            </if>
+            <if test="cooperatorId != null">
+                `cooperator_id` = #{cooperatorId,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                `status` = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="deletedAt != null">
+                `deleted_at` = #{deletedAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDeleted != null">
+                `is_deleted` = #{isDeleted,jdbcType=INTEGER},
+            </if>
+            `updated_at` = now()
+            <!-- todo delete cannot update fields, exp: id, created -->
+        </set>
+        WHERE `id` = #{id} AND `is_deleted` = 0 LIMIT 1
+    </update>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM `cooperation_apply`
+        WHERE `id` = #{id} AND `is_deleted` = 0
+        LIMIT 1
+    </select>
+
+    <select id="query" parameterType="cn.scau.springcloud.domain.query.CooperationApplyQuery" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM `cooperation_apply`
+        <include refid="Where_Clause"/>
+
+        <if test="orderBy != null">
+            ORDER BY ${orderBy}
+        </if>
+        <if test="orderBy == null">
+            ORDER BY `id` desc
+        </if>
+        <if test="start &gt;= 0 and pageSize &gt; 0">
+            LIMIT #{start}, #{pageSize}
+        </if>
+    </select>
+
+    <select id="count" parameterType="cn.scau.springcloud.domain.query.CooperationApplyQuery" resultType="java.lang.Integer">
+        SELECT
+        COUNT(1)
+        FROM `cooperation_apply`
+        <include refid="Where_Clause"/>
+        LIMIT 1
+    </select>
+
+
+</mapper>

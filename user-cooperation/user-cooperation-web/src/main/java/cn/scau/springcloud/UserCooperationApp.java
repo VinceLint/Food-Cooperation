@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 @EnableFeignClients
 //@EnableCircuitBreaker
 @MapperScan("cn.scau.springcloud.mapper")
+//@EnableRedisHttpSession
 public class UserCooperationApp {
     public static void main(String[] args) {
         int port = 9001;

@@ -62,4 +62,18 @@ public class UserDaoImpl implements UserDao {
         }
         return Result.successResult(userDO);
     }
+
+    @Override
+    public Result<UserDO> getUserById(Integer id) {
+        if (id == null || id <= 0) {
+            return Result.argsErrResult();
+        }
+        UserQuery userQuery = new UserQuery();
+        userQuery.setId(id);
+        UserDO userDO = userMapper.queryOne(userQuery);
+        if (userDO == null) {
+            return Result.argsErrResult("id is not exist");
+        }
+        return Result.successResult(userDO);
+    }
 }

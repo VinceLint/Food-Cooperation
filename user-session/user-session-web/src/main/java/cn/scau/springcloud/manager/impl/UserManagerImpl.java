@@ -1,5 +1,6 @@
 package cn.scau.springcloud.manager.impl;
 
+import cn.scau.springcloud.context.UserInfo;
 import cn.scau.springcloud.dao.UserDao;
 import cn.scau.springcloud.domain.Result;
 import cn.scau.springcloud.domain.entity.UserDO;
@@ -98,5 +99,17 @@ public class UserManagerImpl implements UserManager {
         }
         return Result.successResult(true);
 
+    }
+
+    @Override
+    public Result<UserDO> getUser(Integer id) {
+        if (id == null || id <= 0) {
+            return Result.argsErrResult();
+        }
+        Result<UserDO> result = userDao.getUserById(id);
+        if (!result.isSuccess()){
+            return Result.errResult(result.getCode(), result.getMsg());
+        }
+        return Result.successResult(result.getResult());
     }
 }

@@ -9,4 +9,6 @@ public interface UserDao {
     Result<UserDO> insert(UserDO userDO);
 
     Result<UserDO> update(UserDO userDO);
+
+    Result<UserDO> getUserById(Integer id);
 }

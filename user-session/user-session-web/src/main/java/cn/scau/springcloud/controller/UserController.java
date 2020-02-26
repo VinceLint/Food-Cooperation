@@ -1,6 +1,7 @@
 package cn.scau.springcloud.controller;
 
 import cn.scau.springcloud.domain.Result;
+import cn.scau.springcloud.domain.entity.UserDO;
 import cn.scau.springcloud.domain.request.LoginReq;
 import cn.scau.springcloud.domain.request.RegisterReq;
 import cn.scau.springcloud.domain.request.ResetPwdReq;
@@ -55,6 +56,16 @@ public class UserController {
     public ResultVO forgetPwd(@RequestBody @Valid ResetPwdReq resetPwdReq) {
         Result<Boolean> result = userManager.resetPwd(resetPwdReq);
         if (!result.isSuccess()) {
+            return ResultVO.error(result.getCode(), result.getMsg());
+        }
+        return ResultVO.success(result.getResult());
+    }
+
+    @RequestMapping("getUser")
+    @ResponseBody
+    public ResultVO getUser(@RequestParam Integer id){
+        Result<UserDO> result = userManager.getUser(id);
+        if (!result.isSuccess()){
             return ResultVO.error(result.getCode(), result.getMsg());
         }
         return ResultVO.success(result.getResult());
