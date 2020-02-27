@@ -21,7 +21,7 @@ public class CooperationApplyDaoImpl implements CooperationApplyDao {
 
     @Override
     public Result<CooperationApplyDO> queryOne(CooperationApplyQuery query) {
-        if (query ==null){
+        if (query == null) {
             return Result.argsErrResult();
         }
         return DaoHelper.queryOne(cooperationApplyMapper, query);
@@ -33,5 +33,13 @@ public class CooperationApplyDaoImpl implements CooperationApplyDao {
             return Result.argsErrResult();
         }
         return DaoHelper.insert(cooperationApplyMapper, cooperationApplyDO);
+    }
+
+    @Override
+    public PageResult<CooperationApplyDO> query(CooperationApplyQuery query) {
+        if (query == null) {
+            return PageResult.argErrResult();
+        }
+        return DaoHelper.query(cooperationApplyMapper, query);
     }
 }

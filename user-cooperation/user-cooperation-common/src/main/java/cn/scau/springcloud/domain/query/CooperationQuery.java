@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -13,6 +14,9 @@ import java.util.Date;
 public class CooperationQuery extends Query implements Serializable {
     /** id*/
     private Integer id;
+
+    /** ids*/
+    private List<Integer> ids;
 
     /** 合作标题*/
     private String title;

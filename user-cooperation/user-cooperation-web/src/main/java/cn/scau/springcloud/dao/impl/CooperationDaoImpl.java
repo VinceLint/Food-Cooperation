@@ -40,7 +40,7 @@ public class CooperationDaoImpl implements CooperationDao {
     }
 
     @Override
-    public PageResult<CooperationDO> listCommonMsg(CooperationQuery query) {
+    public PageResult<CooperationDO> query(CooperationQuery query) {
         return DaoHelper.query(cooperationMapper, query);
     }
 

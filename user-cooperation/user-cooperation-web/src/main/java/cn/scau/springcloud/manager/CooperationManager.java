@@ -14,4 +14,8 @@ public interface CooperationManager {
     Result<CooperationDO> commonMsg(Integer id);
 
     Result<Boolean> apply(Integer id);
+
+    PageResult<CooperationDO> purchaserCooperation(Integer page, Integer pageSize, Integer status);
+
+    PageResult<CooperationDO> bossCooperation(Integer page, Integer pageSize, Integer status);
 }

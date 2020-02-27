@@ -31,6 +31,12 @@
             <if test="id != null">
                 AND `id` = #{id}
             </if>
+            <if test="ids != null and ids.size() > 0">
+                AND id IN
+                <foreach item="i" index="index" collection="ids" open="(" separator="," close=")">
+                    #{i}
+                </foreach>
+            </if>
             <if test="title != null">
                 AND `title` = #{title}
             </if>
