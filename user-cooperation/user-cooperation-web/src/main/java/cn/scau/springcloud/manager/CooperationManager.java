@@ -24,4 +24,8 @@ public interface CooperationManager {
     PageResult<CooperationApplyVO> bossCooperation(Integer page, Integer pageSize, Integer status, Integer applyStatus);
 
     Result<Boolean> pass(Integer cooperationId, Integer cooperatorId);
+
+    Result<Boolean> reject(Integer cooperationId, Integer cooperatorId, String comment);
+
+    Result<Boolean> end(Integer cooperationId, Integer cooperatorId, Integer status, String comment, Integer score);
 }

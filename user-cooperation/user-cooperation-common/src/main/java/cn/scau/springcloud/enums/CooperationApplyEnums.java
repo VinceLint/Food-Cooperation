@@ -5,7 +5,8 @@ import lombok.Getter;
 public enum CooperationApplyEnums {
     APPLY(0, "待审核"),
     PASS(1, "通过"),
-    REFUSE(2, "拒绝");
+    REFUSE(2, "拒绝"),
+    FINISH(3, "已结束");
     @Getter
     private Integer type;
     @Getter

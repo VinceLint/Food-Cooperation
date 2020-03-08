@@ -9,7 +9,7 @@ public interface CooperationApplyDao {
     Result<CooperationApplyDO> queryOne(CooperationApplyQuery query);
 
     Result<CooperationApplyDO> insert(CooperationApplyDO cooperationApplyDO);
-    
+
     PageResult<CooperationApplyDO> query(CooperationApplyQuery query);
 
     Result<Boolean> update(CooperationApplyDO cooperationApplyDO);

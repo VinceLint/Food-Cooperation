@@ -23,6 +23,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.Reference;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sun.jvm.hotspot.debugger.Page;
 
 import java.util.ArrayList;
@@ -241,14 +242,69 @@ public class CooperationManagerImpl implements CooperationManager {
         query1.setCooperationId(cooperationId);
         query1.setCooperatorId(cooperatorId);
         Result<CooperationApplyDO> result2 = cooperationApplyDao.queryOne(query1);
-        if (!result2.isSuccess()){
+        if (!result2.isSuccess()) {
             return Result.errResult(result2.getCode(), result2.getMsg());
         }
         CooperationApplyDO cooperationApplyDO = result2.getResult();
         cooperationApplyDO.setStatus(CooperationApplyEnums.PASS.getType());
         Result<Boolean> result3 = cooperationApplyDao.update(cooperationApplyDO);
-        if (!result3.isSuccess()){
+        if (!result3.isSuccess()) {
             return Result.errResult(result3.getCode(), result3.getMsg());
+        }
+        return Result.successResult(Boolean.TRUE);
+    }
+
+    @Override
+    public Result<Boolean> reject(Integer cooperationId, Integer cooperatorId, String comment) {
+        CooperationApplyQuery query = new CooperationApplyQuery();
+        query.setCooperationId(cooperationId);
+        query.setCooperatorId(cooperatorId);
+        Result<CooperationApplyDO> result = cooperationApplyDao.queryOne(query);
+        if (!result.isSuccess()) {
+            return Result.errResult(result.getCode(), result.getMsg());
+        }
+        CooperationApplyDO cooperationApplyDO = result.getResult();
+        cooperationApplyDO.setStatus(CooperationApplyEnums.REFUSE.getType());
+        cooperationApplyDO.setComment(comment);
+        Result<Boolean> result1 = cooperationApplyDao.update(cooperationApplyDO);
+        if (!result1.isSuccess()) {
+            return Result.errResult(result1.getCode(), result1.getMsg());
+        }
+        return Result.successResult(Boolean.TRUE);
+    }
+
+    @Override
+    @Transactional
+    public Result<Boolean> end(Integer cooperationId, Integer cooperatorId, Integer status, String comment, Integer score) {
+        // 将合作状态设置为结束
+        CooperationQuery cooperationQuery = new CooperationQuery();
+        cooperationQuery.setId(cooperationId);
+        Result<CooperationDO> cooperationDOResult = cooperationDao.queryOne(cooperationQuery);
+        if (!cooperationDOResult.hasSuccessValue()){
+            return Result.errResult(cooperationDOResult.getCode(), cooperationDOResult.getMsg());
+        }
+        CooperationDO cooperationDO = cooperationDOResult.getResult();
+        cooperationDO.setStatus(status);
+        Result<Boolean> result1 = cooperationDao.update(cooperationDO);
+        if (!result1.isSuccess()) {
+            return Result.errResult(result1.getCode(), result1.getMsg());
+        }
+
+        // 将老板对配送员的评论写入
+        CooperationApplyQuery cooperationApplyQuery = new CooperationApplyQuery();
+        cooperationApplyQuery.setCooperationId(cooperationId);
+        cooperationApplyQuery.setCooperatorId(cooperatorId);
+        Result<CooperationApplyDO> cooperationApplyDOResult = cooperationApplyDao.queryOne(cooperationApplyQuery);
+        if (!cooperationApplyDOResult.hasSuccessValue()){
+            return Result.errResult(cooperationApplyDOResult.getCode(), cooperationApplyDOResult.getMsg());
+        }
+        CooperationApplyDO cooperationApplyDO = cooperationApplyDOResult.getResult();
+        cooperationApplyDO.setScore(score);
+        cooperationApplyDO.setComment(comment);
+        cooperationApplyDO.setStatus(CooperationApplyEnums.FINISH.getType());
+        Result<Boolean> result2 = cooperationApplyDao.update(cooperationApplyDO);
+        if (!result2.isSuccess()) {
+            return Result.errResult(result2.getCode(), result2.getMsg());
         }
         return Result.successResult(Boolean.TRUE);
     }
