@@ -1,12 +1,11 @@
 package cn.scau.springcloud.manager.impl;
 
 import cn.scau.springcloud.context.UserInfo;
+import cn.scau.springcloud.context.UserSessionContextHolder;
 import cn.scau.springcloud.dao.UserDao;
 import cn.scau.springcloud.domain.Result;
 import cn.scau.springcloud.domain.entity.UserDO;
-import cn.scau.springcloud.domain.request.LoginReq;
-import cn.scau.springcloud.domain.request.RegisterReq;
-import cn.scau.springcloud.domain.request.ResetPwdReq;
+import cn.scau.springcloud.domain.request.*;
 import cn.scau.springcloud.domain.response.LoginResp;
 import cn.scau.springcloud.enums.IdentityEnums;
 import cn.scau.springcloud.enums.StatusEnums;
@@ -69,7 +68,7 @@ public class UserManagerImpl implements UserManager {
         userDO.setIdentity(IdentityEnums.NORMAL.getType());
         userDO.setPhone(registerReq.getPhone());
         userDO.setStatus(StatusEnums.NORMAL.getType());
-        userDO.setScore(5);
+        userDO.setScore(5.0f);
         Result<UserDO> userDOResult = userDao.insert(userDO);
         if (!userDOResult.isSuccess()) {
             return Result.sysErrResult(userDOResult.getMsg());
@@ -95,7 +94,7 @@ public class UserManagerImpl implements UserManager {
         userDO.setPassword(newMD5Password);
         Result<UserDO> userDOResult = userDao.update(userDO);
         if (!userDOResult.isSuccess()) {
-            return Result.sysErrResult();
+            return Result.errResult(userDOResult.getCode(), userDOResult.getMsg());
         }
         return Result.successResult(true);
 
@@ -107,9 +106,55 @@ public class UserManagerImpl implements UserManager {
             return Result.argsErrResult();
         }
         Result<UserDO> result = userDao.getUserById(id);
-        if (!result.isSuccess()){
+        if (!result.isSuccess()) {
             return Result.errResult(result.getCode(), result.getMsg());
         }
         return Result.successResult(result.getResult());
+    }
+
+    @Override
+    public Result<Boolean> changePwd(ChangePwdReq changePwdReq) {
+        Integer id = UserSessionContextHolder.getUserId();
+        System.out.println("cp" + id);
+        if (id == null || id <= 0) {
+            return Result.argsErrResult("登陆信息失效，请重新登陆");
+        }
+        Result<UserDO> result = userDao.getUserById(id);
+        if (!result.hasSuccessValue()) {
+            return Result.errResult(result.getCode(), result.getMsg());
+        }
+        UserDO userDO = result.getResult();
+        String orgPassword = userDO.getPassword();
+        String salt = userDO.getSalt();
+        String oldPassword = PasswordUtils.generateMd5Pwd(changePwdReq.getOldPassword(), salt);
+        if (!orgPassword.equals(oldPassword)) {
+            return Result.argsErrResult("原密码错误！");
+        }
+        if (changePwdReq.getNewPassword().equals(changePwdReq.getOldPassword())) {
+            return Result.argsErrResult("新密码不能和原密码一样！");
+        }
+        if (!changePwdReq.getNewPassword().equals(changePwdReq.getConfirmPassword())) {
+            return Result.argsErrResult("新密码和确认密码不一致！");
+        }
+        String newPassword = PasswordUtils.generateMd5Pwd(changePwdReq.getNewPassword(), salt);
+        userDO.setPassword(newPassword);
+        Result<UserDO> userDOResult = userDao.update(userDO);
+        if (!userDOResult.isSuccess()) {
+            return Result.errResult(userDOResult.getCode(), userDOResult.getMsg());
+        }
+        return Result.successResult(true);
+    }
+
+    @Override
+    public Result<Boolean> changeMsg(ChangeMsgReq changeMsgReq) {
+        UserDO userDO = new UserDO();
+        userDO.setId(UserSessionContextHolder.getUserId());
+        userDO.setEmail(changeMsgReq.getEmail());
+        userDO.setPhone(changeMsgReq.getPhone());
+        Result<UserDO> userDOResult = userDao.update(userDO);
+        if (!userDOResult.isSuccess()) {
+            return Result.errResult(userDOResult.getCode(), userDOResult.getMsg());
+        }
+        return Result.successResult(true);
     }
 }

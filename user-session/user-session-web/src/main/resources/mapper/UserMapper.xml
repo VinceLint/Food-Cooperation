@@ -13,7 +13,7 @@
         <result column="email" jdbcType="VARCHAR" property="email"/>
         <result column="identity" jdbcType="INTEGER" property="identity"/>
         <result column="phone" jdbcType="VARCHAR" property="phone"/>
-        <result column="score" jdbcType="INTEGER" property="score"/>
+        <result column="score" jdbcType="FLOAT" property="score"/>
         <result column="status" jdbcType="INTEGER" property="status"/>
         <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
         <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
@@ -26,6 +26,7 @@
 </sql>
 
     <sql id="Where_Clause">
+        1 = 1
         <if test="id != null">
             AND `id` = #{id}
         </if>
@@ -200,14 +201,14 @@
     </select>
 
     <select id="queryOne" parameterType="cn.scau.springcloud.domain.query.UserQuery"
-            resultType="cn.scau.springcloud.domain.entity.UserDO">
+            resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM `user`
         <where>
             <include refid="Where_Clause"/>
         </where>
-        order by id limit 1
+        order by `id` limit 1
     </select>
 
     <select id="count" parameterType="cn.scau.springcloud.domain.query.UserQuery" resultType="java.lang.Integer">

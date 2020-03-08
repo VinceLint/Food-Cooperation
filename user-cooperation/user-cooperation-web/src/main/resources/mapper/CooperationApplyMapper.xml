@@ -9,6 +9,8 @@
         <result column="cooperation_id" jdbcType="INTEGER" property="cooperationId"/>
         <result column="cooperator_id" jdbcType="INTEGER" property="cooperatorId"/>
         <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="comment" jdbcType="VARCHAR" property="comment"/>
+        <result column="score" jdbcType="INTEGER" property="score"/>
         <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
         <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
         <result column="deleted_at" jdbcType="TIMESTAMP" property="deletedAt"/>
@@ -16,7 +18,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-  `id`,`cooperation_id`,`cooperator_id`,`status`,`created_at`,`updated_at`,`deleted_at`,`is_deleted`
+  `id`,`cooperation_id`,`cooperator_id`,`status`,`comment`,`score`,`created_at`,`updated_at`,`deleted_at`,`is_deleted`
 </sql>
 
     <sql id="Where_Clause">
@@ -27,11 +29,23 @@
             <if test="cooperationId != null">
                 AND `cooperation_id` = #{cooperationId}
             </if>
+            <if test="cooperationIds != null">
+                AND `cooperation_id` in
+                <foreach item="i" index="index" collection="cooperationIds" open="(" separator="," close=")">
+                    #{i}
+                </foreach>
+            </if>
             <if test="cooperatorId != null">
                 AND `cooperator_id` = #{cooperatorId}
             </if>
             <if test="status != null">
                 AND `status` = #{status}
+            </if>
+            <if test="comment != null">
+                AND `comment` = #{comment}
+            </if>
+            <if test="score != null">
+                AND `score` = #{score}
             </if>
             <if test="createdAt != null">
                 AND `created_at` = #{createdAt}
@@ -60,6 +74,12 @@
             <if test="status != null">
                 `status`,
             </if>
+            <if test="comment != null">
+                `comment`,
+            </if>
+            <if test="score != null">
+                `score`,
+            </if>
             <if test="deletedAt != null">
                 `deleted_at`,
             </if>
@@ -76,6 +96,12 @@
             </if>
             <if test="status != null">
                 #{status,jdbcType=INTEGER},
+            </if>
+            <if test="comment != null">
+                #{comment,jdbcType=VARCHAR},
+            </if>
+            <if test="score != null">
+                #{score,jdbcType=INTEGER},
             </if>
             <if test="deletedAt != null">
                 #{deletedAt,jdbcType=TIMESTAMP},
@@ -97,6 +123,12 @@
             </if>
             <if test="status != null">
                 `status` = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="comment != null">
+                `comment` = #{comment,jdbcType=VARCHAR},
+            </if>
+            <if test="score != null">
+                `score` = #{score,jdbcType=INTEGER},
             </if>
             <if test="deletedAt != null">
                 `deleted_at` = #{deletedAt,jdbcType=TIMESTAMP},

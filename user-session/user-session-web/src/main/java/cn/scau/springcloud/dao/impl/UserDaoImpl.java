@@ -66,6 +66,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public Result<UserDO> getUserById(Integer id) {
         if (id == null || id <= 0) {
+            System.out.println("gub"+id);
             return Result.argsErrResult();
         }
         UserQuery userQuery = new UserQuery();

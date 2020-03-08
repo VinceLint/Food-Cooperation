@@ -48,4 +48,33 @@ public class CooperationDaoImpl implements CooperationDao {
     public Result<CooperationDO> queryOne(CooperationQuery query) {
         return DaoHelper.queryOne(cooperationMapper, query);
     }
+
+    @Override
+    public PageResult<CooperationDO> queryIds(Integer userId, Integer status) {
+        if (userId == null) {
+            return PageResult.argErrResult();
+        }
+        CooperationQuery query = new CooperationQuery();
+        query.setUserId(userId);
+        query.setStatus(status);
+        try {
+            List<CooperationDO> cooperationDOList = cooperationMapper.query(query);
+            return PageResult.successResult(cooperationDOList.size(), cooperationDOList);
+        } catch (Exception e) {
+            log.error("query cooperation fail, exception:{}", e.getMessage());
+            return PageResult.exceptionResult(e);
+        }
+    }
+
+    @Override
+    public Result<Boolean> update(CooperationDO cooperationDO) {
+        if (cooperationDO == null || cooperationDO.getId() == null) {
+            return Result.argsErrResult();
+        }
+        Integer result = cooperationMapper.updateByPrimaryKeySelective(cooperationDO);
+        if (result == null || result <= 0) {
+            return Result.sysErrResult();
+        }
+        return Result.successResult(Boolean.TRUE);
+    }
 }

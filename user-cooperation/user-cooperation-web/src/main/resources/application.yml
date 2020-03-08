@@ -28,6 +28,19 @@ spring:
         min-idle: 0
         #    连接超时时间
         timeout: 3s
+#  dubbo消费
+#  dubbo:
+#    application:            #应用配置，用于配置当前应用信息，不管该应用是提供者还是消费者。
+#      name: consumer
+#    registry:                 #注册中心配置，用于配置连接注册中心相关信息。
+#      address: zookeeper://127.0.0.1:2181
+#    protocol:     #协议配置，用于配置提供服务的协议信息，协议由提供方指定，消费方被动接受（订阅）。
+#      name: dubbo
+#      port: 20880
+#    consumer:
+#      check: false
+#    reference:
+#      loadbalance: roundrobin
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
   type-aliases-package: cn.scau.springcloud.mapper
@@ -36,4 +49,18 @@ eureka:
     serviceUrl:
       #注册中心地址
       defaultZone: http://localhost:8761/eureka/
+#允许访问 /actuator/bus-refresh
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      cors:
+        allowed-origins: "*"
+        allowed-methods: "*"
+#断路器
+feign:
+  hystrix:
+    enabled: true
+
 

@@ -16,6 +16,9 @@
         <result column="detail" jdbcType="VARCHAR" property="detail"/>
         <result column="status" jdbcType="INTEGER" property="status"/>
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="purchaser_id" jdbcType="INTEGER" property="purchaserId"/>
+        <result column="score" jdbcType="INTEGER" property="score"/>
+        <result column="comment" jdbcType="VARCHAR" property="comment"/>
         <result column="created_at" jdbcType="TIMESTAMP" property="createdAt"/>
         <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt"/>
         <result column="deleted_at" jdbcType="TIMESTAMP" property="deletedAt"/>
@@ -23,11 +26,12 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-  `id`,`title`,`company`,`province`,`city`,`address`,`publish_time`,`detail`,`status`,`user_id`,`created_at`,`updated_at`,`deleted_at`,`is_deleted`
+  `id`,`title`,`company`,`province`,`city`,`address`,`publish_time`,`detail`,`status`,`user_id`,`purchaser_id`,`score`,`comment`,`created_at`,`updated_at`,`deleted_at`,`is_deleted`
 </sql>
 
     <sql id="Where_Clause">
         <trim prefix="WHERE" prefixOverrides="AND |OR ">
+            1 = 1
             <if test="id != null">
                 AND `id` = #{id}
             </if>
@@ -63,6 +67,15 @@
             </if>
             <if test="userId != null">
                 AND `user_id` = #{userId}
+            </if>
+            <if test="purchaserId != null">
+                AND `purchaser_id` = #{purchaserId}
+            </if>
+            <if test="score != null">
+                AND `score` = #{score}
+            </if>
+            <if test="comment != null">
+                AND `comment` = #{comment}
             </if>
             <if test="createdAt != null">
                 AND `created_at` = #{createdAt}
@@ -109,6 +122,15 @@
             <if test="userId != null">
                 `user_id`,
             </if>
+            <if test="purchaserId != null">
+                `purchaser_id`,
+            </if>
+            <if test="score != null">
+                `score`,
+            </if>
+            <if test="comment != null">
+                `comment`,
+            </if>
             <if test="deletedAt != null">
                 `deleted_at`,
             </if>
@@ -143,6 +165,15 @@
             </if>
             <if test="userId != null">
                 #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="purchaserId != null">
+                #{purchaserId,jdbcType=INTEGER},
+            </if>
+            <if test="score != null">
+                #{score,jdbcType=INTEGER},
+            </if>
+            <if test="comment != null">
+                #{comment,jdbcType=VARCHAR},
             </if>
             <if test="deletedAt != null">
                 #{deletedAt,jdbcType=TIMESTAMP},
@@ -182,6 +213,15 @@
             </if>
             <if test="userId != null">
                 `user_id` = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="purchaserId != null">
+                `purchaser_id` = #{purchaserId,jdbcType=INTEGER},
+            </if>
+            <if test="score != null">
+                `score` = #{score,jdbcType=INTEGER},
+            </if>
+            <if test="comment != null">
+                `comment` = #{comment,jdbcType=VARCHAR},
             </if>
             <if test="deletedAt != null">
                 `deleted_at` = #{deletedAt,jdbcType=TIMESTAMP},

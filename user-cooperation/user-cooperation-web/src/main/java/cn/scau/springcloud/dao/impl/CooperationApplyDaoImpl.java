@@ -42,4 +42,12 @@ public class CooperationApplyDaoImpl implements CooperationApplyDao {
         }
         return DaoHelper.query(cooperationApplyMapper, query);
     }
+
+    @Override
+    public Result<Boolean> update(CooperationApplyDO cooperationApplyDO) {
+        if (cooperationApplyDO == null || cooperationApplyDO.getId() == null) {
+            return Result.argsErrResult();
+        }
+        return DaoHelper.update(cooperationApplyMapper, cooperationApplyDO);
+    }
 }

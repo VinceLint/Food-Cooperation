@@ -27,10 +27,10 @@ public class UserDO extends BaseDO {
     private String phone;
 
     /** 0～5，用户评分*/
-    private Integer score;
+    private Float score;
 
     /** 0:正常 2:冻结 2:删除*/
     private Integer status;
-    
+
 }
 

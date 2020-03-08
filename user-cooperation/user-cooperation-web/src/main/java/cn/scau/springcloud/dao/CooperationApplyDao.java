@@ -11,4 +11,6 @@ public interface CooperationApplyDao {
     Result<CooperationApplyDO> insert(CooperationApplyDO cooperationApplyDO);
     
     PageResult<CooperationApplyDO> query(CooperationApplyQuery query);
+
+    Result<Boolean> update(CooperationApplyDO cooperationApplyDO);
 }

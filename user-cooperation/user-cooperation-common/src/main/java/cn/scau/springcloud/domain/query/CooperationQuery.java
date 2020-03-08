@@ -45,6 +45,13 @@ public class CooperationQuery extends Query implements Serializable {
     /** 发布者id*/
     private Integer userId;
 
+    /** 采购人员id*/
+    private Integer purchaserId;
+
+    private String comment;
+
+    private Integer score;
+
     private Date createdAt;
 
     private Date updatedAt;

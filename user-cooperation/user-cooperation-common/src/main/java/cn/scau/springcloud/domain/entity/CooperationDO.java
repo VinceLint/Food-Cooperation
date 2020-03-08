@@ -35,6 +35,13 @@ public class CooperationDO extends BaseDO {
     /** 发布者id*/
     private Integer userId;
 
+    /** 采购人员id*/
+    private Integer purchaserId;
+
+    private String comment;
+
+    private Integer score;
+
     /** 删除时间*/
     private Date deletedAt;
 
