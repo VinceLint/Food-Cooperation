@@ -33,7 +33,8 @@ public class BossController {
     @ResponseBody
     public ResultVO seek(@RequestParam(required = false, defaultValue = "1") Integer page,
                          @RequestParam(required = false, defaultValue = "50") Integer pageSize,
-                         @RequestParam(required = false) Integer status, @RequestParam Integer applyStatus){
+                         @RequestParam(required = false) Integer status,
+                         @RequestParam(required = false) Integer applyStatus){
         PageResult<CooperationApplyVO> pageResult = cooperationManager.bossCooperation(page, pageSize, status, applyStatus);
         if (!pageResult.isSuccess()) {
             return ResultVO.error(pageResult.getCode(), pageResult.getMsg());

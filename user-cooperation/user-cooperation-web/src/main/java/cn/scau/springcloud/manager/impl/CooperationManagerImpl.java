@@ -206,11 +206,15 @@ public class CooperationManagerImpl implements CooperationManager {
             CooperationQuery query1 = new CooperationQuery();
             query1.setId(cooperationApplyVO.getCooperationId());
             Result<CooperationDO> result = cooperationDao.queryOne(query1);
+            CooperationVO cooperationVO = new CooperationVO();
             if (!result.hasSuccessValue()) {
-                cooperationApplyVO.setCooperationVO(null);
+                cooperationApplyVO.setCooperationVO(cooperationVO);
             } else {
-                CooperationVO cooperationVO = new CooperationVO();
                 BeanUtils.copyProperties(result.getResult(), cooperationVO);
+                UserDTO userDTO = userService.getUserById(cooperationVO.getUserId());
+                UserVO userVO = new UserVO();
+                BeanUtils.copyProperties(userDTO, userVO);
+                cooperationVO.setUser(userVO);
                 cooperationApplyVO.setCooperationVO(cooperationVO);
             }
         });
