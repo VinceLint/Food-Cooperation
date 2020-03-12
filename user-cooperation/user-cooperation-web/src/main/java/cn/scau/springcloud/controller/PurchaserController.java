@@ -23,8 +23,9 @@ public class PurchaserController {
     @ResponseBody
     public ResultVO seek(@RequestParam(required = false, defaultValue = "1") Integer page,
                          @RequestParam(required = false, defaultValue = "50") Integer pageSize,
-                         @RequestParam Integer status){
-        PageResult<CooperationDO> pageResult = cooperationManager.purchaserCooperation(page, pageSize, status);
+                         @RequestParam(required = false) Integer status,
+                         @RequestParam(required = false) Integer applyStatus){
+        PageResult<CooperationDO> pageResult = cooperationManager.purchaserCooperation(page, pageSize, status, applyStatus);
         if (!pageResult.isSuccess()) {
             return ResultVO.error(pageResult.getCode(), pageResult.getMsg());
         }

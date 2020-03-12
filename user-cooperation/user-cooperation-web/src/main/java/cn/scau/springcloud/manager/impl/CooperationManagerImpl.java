@@ -134,10 +134,11 @@ public class CooperationManagerImpl implements CooperationManager {
     }
 
     @Override
-    public PageResult<CooperationDO> purchaserCooperation(Integer page, Integer pageSize, Integer status) {
+    public PageResult<CooperationDO> purchaserCooperation(Integer page, Integer pageSize, Integer status, Integer applyStatus) {
         // 先查询该用户的所有合作关系
         CooperationApplyQuery cooperationApplyQuery = new CooperationApplyQuery();
         cooperationApplyQuery.setCooperatorId(UserSessionContextHolder.getUserId());
+        cooperationApplyQuery.setStatus(applyStatus);
         PageResult<CooperationApplyDO> applyDOPageResult = cooperationApplyDao.query(cooperationApplyQuery);
         if (!applyDOPageResult.isSuccess()) {
             return PageResult.errorResult(applyDOPageResult.getCode(), applyDOPageResult.getMsg());

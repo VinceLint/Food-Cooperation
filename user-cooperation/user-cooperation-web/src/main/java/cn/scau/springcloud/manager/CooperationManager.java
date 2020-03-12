@@ -19,7 +19,7 @@ public interface CooperationManager {
 
     Result<Boolean> apply(Integer id);
 
-    PageResult<CooperationDO> purchaserCooperation(Integer page, Integer pageSize, Integer status);
+    PageResult<CooperationDO> purchaserCooperation(Integer page, Integer pageSize, Integer status, Integer applyStatus);
 
     PageResult<CooperationApplyVO> bossCooperation(Integer page, Integer pageSize, Integer status, Integer applyStatus);
 
