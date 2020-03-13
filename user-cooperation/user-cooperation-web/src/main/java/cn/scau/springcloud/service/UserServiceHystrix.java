@@ -11,4 +11,9 @@ public class UserServiceHystrix implements UserService {
         userDTO.setUsername("/");
         return userDTO;
     }
+
+    @Override
+    public void syncScore(Integer id, Float score) {
+        System.out.println("同步用户评分失败啦");
+    }
 }

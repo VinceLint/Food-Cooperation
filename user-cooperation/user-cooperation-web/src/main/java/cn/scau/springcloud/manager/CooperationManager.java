@@ -27,5 +27,9 @@ public interface CooperationManager {
 
     Result<Boolean> reject(Integer cooperationId, Integer cooperatorId, String comment);
 
-    Result<Boolean> end(Integer cooperationId, Integer cooperatorId, Integer status, String comment, Integer score);
+    Result<Boolean> bossEnd(Integer cooperationId, Integer cooperatorId, Integer status, String comment, Integer score);
+
+    PageResult<CooperationApplyVO> purchaserFinishCooperation(Integer page, Integer pageSize, Integer status, Integer applyStatus);
+
+    Result<Boolean> purchaserEnd(Integer cooperationId, String comment, Integer score);
 }

@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Repository
 @Slf4j
@@ -49,5 +50,14 @@ public class CooperationApplyDaoImpl implements CooperationApplyDao {
             return Result.argsErrResult();
         }
         return DaoHelper.update(cooperationApplyMapper, cooperationApplyDO);
+    }
+
+    @Override
+    public Result<List<Integer>> getScoreList(Integer userId) {
+        if (userId == null){
+            return Result.argsErrResult();
+        }
+        List<Integer> result = cooperationApplyMapper.getScoreListByUserId(userId);
+        return Result.successResult(result);
     }
 }

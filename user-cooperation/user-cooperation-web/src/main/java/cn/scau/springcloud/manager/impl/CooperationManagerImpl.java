@@ -21,15 +21,12 @@ import cn.scau.springcloud.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.Reference;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sun.jvm.hotspot.debugger.Page;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Slf4j
@@ -169,9 +166,7 @@ public class CooperationManagerImpl implements CooperationManager {
 
     @Override
     public PageResult<CooperationApplyVO> bossCooperation(Integer page, Integer pageSize, Integer status, Integer applyStatus) {
-//        List<Map> result = new ArrayList();
-        // 审核
-        // 当前用户的所发布的所有未找到合作的id
+        // 当前用户的所发布的对应状态的合作的id
         PageResult<CooperationDO> cooperationDOPageResult = cooperationDao.queryIds(UserSessionContextHolder.getUserId(), status);
         if (!cooperationDOPageResult.isSuccess()) {
             return PageResult.sysErrResult();
@@ -280,12 +275,12 @@ public class CooperationManagerImpl implements CooperationManager {
 
     @Override
     @Transactional
-    public Result<Boolean> end(Integer cooperationId, Integer cooperatorId, Integer status, String comment, Integer score) {
+    public Result<Boolean> bossEnd(Integer cooperationId, Integer cooperatorId, Integer status, String comment, Integer score) {
         // 将合作状态设置为结束
         CooperationQuery cooperationQuery = new CooperationQuery();
         cooperationQuery.setId(cooperationId);
         Result<CooperationDO> cooperationDOResult = cooperationDao.queryOne(cooperationQuery);
-        if (!cooperationDOResult.hasSuccessValue()){
+        if (!cooperationDOResult.hasSuccessValue()) {
             return Result.errResult(cooperationDOResult.getCode(), cooperationDOResult.getMsg());
         }
         CooperationDO cooperationDO = cooperationDOResult.getResult();
@@ -300,7 +295,7 @@ public class CooperationManagerImpl implements CooperationManager {
         cooperationApplyQuery.setCooperationId(cooperationId);
         cooperationApplyQuery.setCooperatorId(cooperatorId);
         Result<CooperationApplyDO> cooperationApplyDOResult = cooperationApplyDao.queryOne(cooperationApplyQuery);
-        if (!cooperationApplyDOResult.hasSuccessValue()){
+        if (!cooperationApplyDOResult.hasSuccessValue()) {
             return Result.errResult(cooperationApplyDOResult.getCode(), cooperationApplyDOResult.getMsg());
         }
         CooperationApplyDO cooperationApplyDO = cooperationApplyDOResult.getResult();
@@ -311,6 +306,94 @@ public class CooperationManagerImpl implements CooperationManager {
         if (!result2.isSuccess()) {
             return Result.errResult(result2.getCode(), result2.getMsg());
         }
+        syncData(cooperationApplyDO.getCooperatorId());
         return Result.successResult(Boolean.TRUE);
+    }
+
+    @Override
+    public PageResult<CooperationApplyVO> purchaserFinishCooperation(Integer page, Integer pageSize, Integer status, Integer applyStatus) {
+        // 当前用户的所有结束的合作
+        CooperationApplyQuery cooperationApplyQuery = new CooperationApplyQuery();
+        cooperationApplyQuery.setCooperatorId(UserSessionContextHolder.getUserId());
+        cooperationApplyQuery.setStatus(applyStatus);
+        cooperationApplyQuery.setCurPage(page);
+        cooperationApplyQuery.setPageSize(pageSize);
+        cooperationApplyQuery.setWithCount(Boolean.TRUE);
+        cooperationApplyQuery.setOrderBy("updated_at");
+        PageResult<CooperationApplyDO> cooperationApplyDOResult = cooperationApplyDao.query(cooperationApplyQuery);
+        if (!cooperationApplyDOResult.isSuccess()) {
+            return PageResult.errorResult(cooperationApplyDOResult.getCode(), cooperationApplyDOResult.getMsg());
+        }
+        List<CooperationApplyDO> cooperationApplyDOList = cooperationApplyDOResult.getResults();
+        List<CooperationApplyVO> cooperationApplyVOList = new ArrayList<>();
+        cooperationApplyDOList.forEach(cooperationApplyDO -> {
+            CooperationApplyVO cooperationApplyVO = new CooperationApplyVO();
+            BeanUtils.copyProperties(cooperationApplyDO, cooperationApplyVO);
+
+            // 查询对应的合作
+            CooperationQuery query = new CooperationQuery();
+            query.setId(cooperationApplyDO.getCooperationId());
+            Result<CooperationDO> result = cooperationDao.queryOne(query);
+            CooperationDO cooperationDO = result.getResult();
+            CooperationVO cooperationVO = new CooperationVO();
+            if (cooperationDO != null) {
+                BeanUtils.copyProperties(cooperationDO, cooperationVO);
+            }
+            // 查询对应的雇主
+            UserDTO userDTO = userService.getUserById(cooperationVO.getUserId());
+            UserVO userVO = new UserVO();
+            if (userDTO != null) {
+                BeanUtils.copyProperties(userDTO, userVO);
+            }
+            cooperationVO.setUser(userVO);
+            cooperationApplyVO.setCooperationVO(cooperationVO);
+            cooperationApplyVOList.add(cooperationApplyVO);
+        });
+        return PageResult.successResult(cooperationApplyVOList.size(), cooperationApplyVOList);
+    }
+
+    @Override
+    public Result<Boolean> purchaserEnd(Integer cooperationId, String comment, Integer score) {
+        CooperationQuery query = new CooperationQuery();
+        query.setId(cooperationId);
+        Result<CooperationDO> cooperationDOResult = cooperationDao.queryOne(query);
+        if (!cooperationDOResult.isSuccess()) {
+            return Result.errResult(cooperationDOResult.getCode(), cooperationDOResult.getMsg());
+        }
+        CooperationDO cooperationDO = cooperationDOResult.getResult();
+        cooperationDO.setComment(comment);
+        cooperationDO.setScore(score);
+        Result<Boolean> result = cooperationDao.update(cooperationDO);
+        if (!result.isSuccess()) {
+            return Result.errResult(result.getCode(), result.getMsg());
+        }
+        syncData(cooperationDO.getUserId());
+        return Result.successResult(Boolean.TRUE);
+    }
+
+    /**
+     * 同步用户分数
+     */
+    private void syncData(Integer userId) {
+        int total = 0;
+        Result<List<Integer>> cooperationScoreListResult = cooperationDao.getScoreList(userId);
+        List<Integer> cooperationScoreList = cooperationScoreListResult.getResult();
+        for (Integer cScore : cooperationScoreList) {
+            total += cScore;
+        }
+        System.out.println("total1: " + total);
+        Result<List<Integer>> cooperationApplyScoreListResult = cooperationApplyDao.getScoreList(userId);
+        List<Integer> cooperationApplyScoreList = cooperationApplyScoreListResult.getResult();
+        for (Integer caScore : cooperationApplyScoreList) {
+            total += caScore;
+        }
+        System.out.println("total2: " + total);
+        if (cooperationScoreList.size() + cooperationApplyScoreList.size() > 0) {
+            float score = ((float) total) / (cooperationScoreList.size() + cooperationApplyScoreList.size());
+            // 保留2位小数
+            String ss = String.format("%1.2f", score);
+            System.out.println("ss: " + ss);
+            userService.syncScore(userId, Float.parseFloat(ss));
+        }
     }
 }

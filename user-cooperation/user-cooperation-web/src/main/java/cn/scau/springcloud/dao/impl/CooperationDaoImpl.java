@@ -77,4 +77,13 @@ public class CooperationDaoImpl implements CooperationDao {
         }
         return Result.successResult(Boolean.TRUE);
     }
+
+    @Override
+    public Result<List<Integer>> getScoreList(Integer userId) {
+        if (userId == null){
+            return Result.argsErrResult();
+        }
+        List<Integer> result = cooperationMapper.getScoreListByUserId(userId);
+        return Result.successResult(result);
+    }
 }

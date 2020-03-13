@@ -5,6 +5,8 @@ import cn.scau.springcloud.domain.Result;
 import cn.scau.springcloud.domain.entity.CooperationApplyDO;
 import cn.scau.springcloud.domain.query.CooperationApplyQuery;
 
+import java.util.List;
+
 public interface CooperationApplyDao {
     Result<CooperationApplyDO> queryOne(CooperationApplyQuery query);
 
@@ -13,4 +15,6 @@ public interface CooperationApplyDao {
     PageResult<CooperationApplyDO> query(CooperationApplyQuery query);
 
     Result<Boolean> update(CooperationApplyDO cooperationApplyDO);
+
+    Result<List<Integer>> getScoreList(Integer userId);
 }

@@ -75,7 +75,7 @@ public class BossController {
         if (!validRst.isSuccess()) {
             return validRst;
         }
-        Result<Boolean> result = cooperationManager.end(applyEndReq.getCooperationId(),
+        Result<Boolean> result = cooperationManager.bossEnd(applyEndReq.getCooperationId(),
                 applyEndReq.getCooperatorId(), applyEndReq.getStatus(), applyEndReq.getComment(), applyEndReq.getScore());
         if (!result.isSuccess()){
             return ResultVO.error(result.getCode(), result.getMsg());

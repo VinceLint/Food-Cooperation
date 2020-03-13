@@ -17,4 +17,6 @@ public interface CooperationDao {
     PageResult<CooperationDO> queryIds(Integer userId, Integer status);
 
     Result<Boolean> update(CooperationDO cooperationDO);
+
+    Result<List<Integer>> getScoreList(Integer userId);
 }

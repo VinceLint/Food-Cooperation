@@ -268,5 +268,10 @@
         LIMIT 1
     </select>
 
+    <select id="getScoreListByUserId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        SELECT score
+        FROM `cooperation`
+        WHERE `user_id` = #{userId} AND `score` is not null
+    </select>
 
 </mapper>
