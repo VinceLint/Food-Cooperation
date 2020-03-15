@@ -36,11 +36,14 @@ public class UserSessionFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String idToken = httpRequest.getHeader("token");
         System.out.println(idToken);
-        UserDO userDO  = (UserDO) redisUtils.get(idToken);
+        UserDO userDO = (UserDO) redisUtils.get(idToken);
         // 未登陆
         if (userDO == null ){
+            ((HttpServletResponse) response).setStatus(1002);
             return;
         }
+        // 每次操作都把用户信息存储延长2个小时
+        redisUtils.set(idToken, userDO, 60 * 60 * 2);
         UserInfo userInfo = new UserInfo();
         BeanUtils.copyProperties(userDO, userInfo);
         System.out.println(userInfo.toString());
