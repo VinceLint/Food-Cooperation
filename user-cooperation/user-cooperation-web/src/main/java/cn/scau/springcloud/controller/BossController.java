@@ -45,7 +45,11 @@ public class BossController {
 
     @RequestMapping("pass")
     @ResponseBody
-    public ResultVO pass(@RequestBody @Valid ApplyPassReq applyPassReq){
+    public ResultVO pass(@RequestBody @Valid ApplyPassReq applyPassReq, BindingResult bindingResult){
+        ResultVO validRst = ValidatorResultHandler.handler(bindingResult);
+        if (!validRst.isSuccess()) {
+            return validRst;
+        }
         Result<Boolean> result = cooperationManager.pass(applyPassReq.getCooperationId(), applyPassReq.getCooperatorId());
         if (!result.isSuccess()){
             return ResultVO.error(result.getCode(), result.getMsg());

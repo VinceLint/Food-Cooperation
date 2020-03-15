@@ -8,12 +8,15 @@ import cn.scau.springcloud.domain.response.LoginResp;
 import cn.scau.springcloud.domain.response.RegisterResp;
 import cn.scau.springcloud.domain.vo.ResultVO;
 import cn.scau.springcloud.form.UserForm;
+import cn.scau.springcloud.handler.ValidatorResultHandler;
 import cn.scau.springcloud.manager.UserManager;
 import cn.scau.springcloud.util.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -32,7 +35,11 @@ public class UserController {
 
     @RequestMapping(value = "login", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public ResultVO login(@RequestBody @Valid LoginReq loginReq) {
+    public ResultVO login(@RequestBody @Valid LoginReq loginReq, BindingResult bindingResult) {
+        ResultVO validRst = ValidatorResultHandler.handler(bindingResult);
+        if (!validRst.isSuccess()) {
+            return validRst;
+        }
         Result<LoginResp> result = userManager.login(loginReq);
         if (!result.isSuccess()) {
             return ResultVO.error(result.getCode(), result.getMsg());
@@ -42,7 +49,11 @@ public class UserController {
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
     @ResponseBody
-    public ResultVO register(@RequestBody @Valid  RegisterReq registerReq) {
+    public ResultVO register(@RequestBody @Valid  RegisterReq registerReq, BindingResult bindingResult) {
+        ResultVO validRst = ValidatorResultHandler.handler(bindingResult);
+        if (!validRst.isSuccess()) {
+            return validRst;
+        }
         Result<Boolean> result = userManager.register(registerReq);
         if (!result.isSuccess()) {
             return ResultVO.error(result.getCode(), result.getMsg());
@@ -52,7 +63,11 @@ public class UserController {
 
     @RequestMapping(value = "forgetPwd", method = RequestMethod.POST)
     @ResponseBody
-    public ResultVO forgetPwd(@RequestBody @Valid ResetPwdReq resetPwdReq) {
+    public ResultVO forgetPwd(@RequestBody @Valid ResetPwdReq resetPwdReq, BindingResult bindingResult) {
+        ResultVO validRst = ValidatorResultHandler.handler(bindingResult);
+        if (!validRst.isSuccess()) {
+            return validRst;
+        }
         Result<Boolean> result = userManager.resetPwd(resetPwdReq);
         if (!result.isSuccess()) {
             return ResultVO.error(result.getCode(), result.getMsg());
@@ -62,7 +77,11 @@ public class UserController {
 
     @RequestMapping(value = "changePwd", method = RequestMethod.POST)
     @ResponseBody
-    public ResultVO changePwd(@RequestBody @Valid ChangePwdReq changePwdReq) {
+    public ResultVO changePwd(@RequestBody @Valid ChangePwdReq changePwdReq, BindingResult bindingResult) {
+        ResultVO validRst = ValidatorResultHandler.handler(bindingResult);
+        if (!validRst.isSuccess()) {
+            return validRst;
+        }
         Result<Boolean> result = userManager.changePwd(changePwdReq);
         if (!result.isSuccess()) {
             return ResultVO.error(result.getCode(), result.getMsg());
@@ -72,7 +91,11 @@ public class UserController {
 
     @RequestMapping(value = "changeMsg", method = RequestMethod.POST)
     @ResponseBody
-    public ResultVO changeMsg(@RequestBody @Valid ChangeMsgReq changeMsgReq) {
+    public ResultVO changeMsg(@RequestBody @Valid ChangeMsgReq changeMsgReq, BindingResult bindingResult) {
+        ResultVO validRst = ValidatorResultHandler.handler(bindingResult);
+        if (!validRst.isSuccess()) {
+            return validRst;
+        }
         Result<Boolean> result = userManager.changeMsg(changeMsgReq);
         if (!result.isSuccess()) {
             return ResultVO.error(result.getCode(), result.getMsg());
