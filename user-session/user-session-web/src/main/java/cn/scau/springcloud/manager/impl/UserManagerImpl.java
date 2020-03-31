@@ -9,12 +9,15 @@ import cn.scau.springcloud.domain.request.*;
 import cn.scau.springcloud.domain.response.LoginResp;
 import cn.scau.springcloud.enums.IdentityEnums;
 import cn.scau.springcloud.enums.StatusEnums;
+import cn.scau.springcloud.helper.VerifyHelper;
 import cn.scau.springcloud.manager.UserManager;
 import cn.scau.springcloud.util.JwtUtils;
 import cn.scau.springcloud.util.PasswordUtils;
 import cn.scau.springcloud.util.RedisUtils;
+import cn.scau.springcloud.utils.IMailUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -28,6 +31,10 @@ public class UserManagerImpl implements UserManager {
     private RedisUtils redisUtils;
     @Resource
     private UserDao userDao;
+    @Autowired
+    private IMailUtils iMailUtils;
+    @Autowired
+    private VerifyHelper verifyHelper;
 
     @Override
     public Result<LoginResp> login(LoginReq loginReq) {
@@ -85,6 +92,10 @@ public class UserManagerImpl implements UserManager {
         UserDO userDO = result.getResult();
         if (!userDO.getEmail().equals(resetPwdReq.getEmail())) {
             return Result.argsErrResult("该用户绑定的邮箱有误");
+        }
+        String verifyCode = resetPwdReq.getVerifyCode();
+        if (verifyCode != null && !verifyCode.equals(verifyHelper.getVerifyCode(userDO.getId().toString()))) {
+            return Result.argsErrResult("验证码有误，请检查");
         }
         if (!resetPwdReq.getNewPassword().equals(resetPwdReq.getConfirmPassword())) {
             return Result.argsErrResult("两次输入的密码不一致");
@@ -156,5 +167,23 @@ public class UserManagerImpl implements UserManager {
             return Result.errResult(userDOResult.getCode(), userDOResult.getMsg());
         }
         return Result.successResult(true);
+    }
+
+    @Override
+    public Result<Boolean> getVerifyCode(String username, String email) {
+        Result<UserDO> userDOResult = userDao.getUserByUsername(username);
+        if (!userDOResult.isSuccess()) {
+            return Result.errResult(userDOResult.getCode(), userDOResult.getMsg());
+        }
+        UserDO userDO = userDOResult.getResult();
+        if (!email.equals(userDO.getEmail())) {
+            return Result.argsErrResult("用户名与邮箱不匹配");
+        }
+        // 生成验证码并存在redis中
+        String verifyCode = verifyHelper.getRandomCode(userDO.getId().toString());
+        iMailUtils.sendSimpleMail(userDO.getEmail(), "您正在使用【FoodCooperation】进行验证",
+                "感谢您使用【FoodCooperation】, 如果非本人操作请忽略此邮件，本次验证码为: " + verifyCode +
+                        " , 30分钟内有效。本邮件为系统发送, 请勿回复此邮件！");
+        return Result.successResult(Boolean.TRUE);
     }
 }

@@ -11,6 +11,8 @@ import cn.scau.springcloud.form.UserForm;
 import cn.scau.springcloud.handler.ValidatorResultHandler;
 import cn.scau.springcloud.manager.UserManager;
 import cn.scau.springcloud.util.JwtUtils;
+import cn.scau.springcloud.util.StringUtil;
+import cn.scau.springcloud.utils.IMailUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +49,26 @@ public class UserController {
         return ResultVO.success(result.getResult());
     }
 
+    @RequestMapping(value = "getVerifyCode", method = RequestMethod.GET)
+    @ResponseBody
+    public ResultVO getVerifyCode(@RequestParam(value="username", required = false) String username,
+                                  @RequestParam(value="email", required = false) String email) {
+        if (StringUtil.isEmpty(username)) {
+            return ResultVO.error(-1, "用户名不能为空");
+        }
+        if (StringUtil.isEmpty(email)) {
+            return ResultVO.error(-1, "邮箱不能为空");
+        }
+        Result<Boolean> result = userManager.getVerifyCode(username, email);
+        if (!result.isSuccess()) {
+            return ResultVO.error(result.getCode(), result.getMsg());
+        }
+        return ResultVO.success(result.getResult());
+    }
+
     @RequestMapping(value = "register", method = RequestMethod.POST)
     @ResponseBody
-    public ResultVO register(@RequestBody @Valid  RegisterReq registerReq, BindingResult bindingResult) {
+    public ResultVO register(@RequestBody @Valid RegisterReq registerReq, BindingResult bindingResult) {
         ResultVO validRst = ValidatorResultHandler.handler(bindingResult);
         if (!validRst.isSuccess()) {
             return validRst;
@@ -115,9 +134,9 @@ public class UserController {
 
     @RequestMapping("getUser")
     @ResponseBody
-    public ResultVO getUser(@RequestParam Integer id){
+    public ResultVO getUser(@RequestParam Integer id) {
         Result<UserDO> result = userManager.getUser(id);
-        if (!result.isSuccess()){
+        if (!result.isSuccess()) {
             return ResultVO.error(result.getCode(), result.getMsg());
         }
         return ResultVO.success(result.getResult());

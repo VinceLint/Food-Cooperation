@@ -26,4 +26,9 @@ public class ResetPwdReq {
     @NotEmpty(message = "新密码不能为空")
     @Length(min=6, max = 20, message = "邮箱长度必须在{min}到{max}之间")
     private String confirmPassword;
+
+    /** 验证码*/
+    @NotEmpty(message = "验证码不能为空")
+    @Length(min=6, max = 6, message = "验证码长度必须为{min}")
+    private String verifyCode;
 }

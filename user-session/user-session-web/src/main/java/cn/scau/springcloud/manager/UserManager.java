@@ -19,4 +19,6 @@ public interface UserManager {
     Result<Boolean> changePwd(ChangePwdReq changePwdReq);
 
     Result<Boolean> changeMsg(ChangeMsgReq changeMsgReq);
+
+    Result<Boolean> getVerifyCode(String username, String email);
 }
