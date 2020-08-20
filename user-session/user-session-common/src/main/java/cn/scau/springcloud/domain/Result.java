@@ -7,6 +7,11 @@ import java.io.Serializable;
 import java.lang.reflect.UndeclaredThrowableException;
 
 
+
+0:申请中  100:工单中含有无效座标  
+200:安全扫描失败  
+210:安全扫描通过  
+300:审核通过 310:审核不通过  400:上传成功  410:上传失败
 /**
  * return Result
  * @author vincelin
