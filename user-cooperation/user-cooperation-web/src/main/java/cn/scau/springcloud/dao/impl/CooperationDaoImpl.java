@@ -17,7 +17,6 @@ import java.util.List;
 @Repository
 @Slf4j
 public class CooperationDaoImpl implements CooperationDao {
-
     @Resource
     private CooperationMapper cooperationMapper;
 
